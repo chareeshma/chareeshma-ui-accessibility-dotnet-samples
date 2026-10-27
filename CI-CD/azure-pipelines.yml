@@ -1,0 +1,192 @@
+# Create an Azure DevOps pipeline pointing to this file.
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - main
+
+parameters:
+  - name: deploy
+    displayName: Deploy API after successful checks
+    type: boolean
+    default: false
+  - name: azureServiceConnection
+    type: string
+    default: configure-azure-service-connection
+  - name: keyVaultName
+    type: string
+    default: configure-key-vault-name
+  - name: resourceGroup
+    type: string
+    default: configure-resource-group
+  - name: webAppName
+    type: string
+    default: configure-linux-web-app
+
+variables:
+  buildConfiguration: Release
+  apiProject: Backend/AccessibleApi/AccessibleApi.csproj
+  artifactName: api
+  DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+  NODE_ENV: development
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: BuildTestPublish
+    displayName: Restore, build, test, and publish
+    jobs:
+      - job: Verify
+        steps:
+          - checkout: self
+            persistCredentials: false
+
+          - task: UseDotNet@2
+            displayName: Install .NET SDK
+            inputs:
+              packageType: sdk
+              version: 10.0.x
+
+          - task: NodeTool@0
+            displayName: Install Node.js
+            inputs:
+              versionSpec: 24.x
+
+          - bash: |
+              set -euo pipefail
+              dotnet restore "$(apiProject)"
+              npm ci --no-audit --no-fund
+            displayName: Restore API and UI dependencies
+
+          - bash: |
+              set -euo pipefail
+              dotnet build "$(apiProject)" --configuration "$(buildConfiguration)" --no-restore
+              npm run build
+            displayName: Build API, React, and Angular
+
+          - bash: |
+              set -euo pipefail
+              npx playwright install --with-deps chromium
+              npm test -- --reporter=line,junit
+            displayName: Test keyboard behavior and accessibility
+            env:
+              CI: 'true'
+              PLAYWRIGHT_JUNIT_OUTPUT_FILE: $(Common.TestResultsDirectory)/playwright.xml
+
+          - task: PublishTestResults@2
+            displayName: Publish browser test results
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: JUnit
+              testResultsFiles: $(Common.TestResultsDirectory)/playwright.xml
+              failTaskOnFailedTests: true
+              failTaskOnMissingResultsFile: true
+              testRunTitle: UI accessibility tests
+
+          - task: PublishPipelineArtifact@1
+            displayName: Publish accessibility evidence
+            inputs:
+              targetPath: $(Build.SourcesDirectory)/Accessibility
+              artifact: accessibility-evidence
+
+          - bash: |
+              set -euo pipefail
+              dotnet publish "$(apiProject)" \
+                --configuration "$(buildConfiguration)" \
+                --no-build \
+                --output "$(Build.ArtifactStagingDirectory)/publish"
+            displayName: Publish deployable API
+
+          - task: ArchiveFiles@2
+            displayName: Package API
+            inputs:
+              rootFolderOrFile: $(Build.ArtifactStagingDirectory)/publish
+              includeRootFolder: false
+              archiveType: zip
+              archiveFile: $(Build.ArtifactStagingDirectory)/api.zip
+              replaceExistingArchive: true
+
+          - task: PublishPipelineArtifact@1
+            displayName: Publish API artifact
+            inputs:
+              targetPath: $(Build.ArtifactStagingDirectory)/api.zip
+              artifact: $(artifactName)
+
+  - stage: Deploy
+    displayName: Deploy to Azure App Service
+    dependsOn: BuildTestPublish
+    condition: |
+      and(
+        succeeded(),
+        ${{ eq(parameters.deploy, true) }},
+        eq(variables['Build.SourceBranch'], 'refs/heads/main'),
+        ne(variables['Build.Reason'], 'PullRequest')
+      )
+    jobs:
+      - deployment: DeployApi
+        displayName: Configure and deploy API
+        environment: api-production
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: $(artifactName)
+
+                - task: AzureKeyVault@2
+                  displayName: Retrieve catalog connection string
+                  inputs:
+                    azureSubscription: ${{ parameters.azureServiceConnection }}
+                    KeyVaultName: ${{ parameters.keyVaultName }}
+                    SecretsFilter: CatalogConnectionString
+                    RunAsPreJob: false
+
+                - task: AzureAppServiceSettings@1
+                  displayName: Configure runtime environment variables
+                  inputs:
+                    azureSubscription: ${{ parameters.azureServiceConnection }}
+                    appName: ${{ parameters.webAppName }}
+                    resourceGroupName: ${{ parameters.resourceGroup }}
+                    appSettings: |
+                      [
+                        {
+                          "name": "ASPNETCORE_ENVIRONMENT",
+                          "value": "Production",
+                          "slotSetting": false
+                        },
+                        {
+                          "name": "Authentication__Authority",
+                          "value": "$(oidcAuthority)",
+                          "slotSetting": true
+                        },
+                        {
+                          "name": "Authentication__Audience",
+                          "value": "$(oidcAudience)",
+                          "slotSetting": true
+                        },
+                        {
+                          "name": "ConnectionStrings__Catalog",
+                          "value": "$(CatalogConnectionString)",
+                          "slotSetting": true
+                        },
+                        {
+                          "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+                          "value": "true",
+                          "slotSetting": false
+                        }
+                      ]
+
+                - task: AzureWebApp@1
+                  displayName: Deploy published API package
+                  inputs:
+                    azureSubscription: ${{ parameters.azureServiceConnection }}
+                    appType: webAppLinux
+                    appName: ${{ parameters.webAppName }}
+                    package: $(Pipeline.Workspace)/$(artifactName)/api.zip
+                    runtimeStack: DOTNETCORE|10.0
+                    startUpCommand: dotnet AccessibleApi.dll
