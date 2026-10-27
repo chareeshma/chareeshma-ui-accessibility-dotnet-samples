@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.angular/
+playwright-report/
+test-results/
+**/bin/
+**/obj/
+*.db
+*.db-shm
+*.db-wal

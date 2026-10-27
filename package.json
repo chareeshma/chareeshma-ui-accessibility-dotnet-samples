@@ -1,0 +1,19 @@
+{
+  "name": "accessible-ui-samples",
+  "private": true,
+  "workspaces": [
+    "react",
+    "angular"
+  ],
+  "scripts": {
+    "dev:react": "npm run dev --workspace react",
+    "dev:angular": "npm run dev --workspace angular",
+    "build": "npm run build --workspaces",
+    "test": "playwright test",
+    "test:axe-report": "playwright test tests/axe-report.spec.ts"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "^1.51.1"
+  }
+}
