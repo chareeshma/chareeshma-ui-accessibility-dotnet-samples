@@ -1,47 +1,27 @@
-# WAVE Scan Screenshots
+# WAVE screenshot inventory
 
-This folder contains manual WAVE accessibility scan evidence for both the React and Angular sample applications. All scans were performed using the WAVE browser extension in Google Chrome.
+The maintainer reports completing WAVE extension checks in Chrome on both
+applications. PNG captures are present for both applications. Their filenames
+are generic, and the repository does not record capture dates, WAVE extension
+version, exact page state, or a reliable one-to-one mapping between files and
+states. Manual checks are reported as completed, but the evidence record is not
+complete or reproducible.
 
-## Scan Environment
-- Browser: Google Chrome (latest)
-- WAVE Extension Version: [insert version]
-- Scan Dates: [insert dates]
-- Pages Tested:
-  - React initial page
-  - React invalid form state
-  - React modal open state
-  - Angular initial page
-  - Angular invalid form state
-  - Angular review/dialog state (if applicable)
+## Files present
 
-## Findings Summary
-### React
-- No WCAG‑violating errors detected.
-- Alerts present for best‑practice items (e.g., redundant links, structural suggestions).
-- No contrast issues.
-- ARIA roles and labels detected correctly.
-- Form validation errors surfaced correctly in WAVE.
+- Angular: `Angular/WAVE Screenshot 1.png`, `Angular/WAVE Screenshot 2.png`,
+  `Angular/WAVE Screenshot 3.png`
+- React: `React/WAVE Screenshot 1.png`, `React/WAVE Screenshot 2.png`,
+  `React/WAVE Screenshot 3.png`, `React/WAVE Screenshot 4.png`
 
-### Angular
-- No WCAG‑violating errors detected.
-- Alerts present for structural suggestions.
-- No contrast issues.
-- Form labels and error messages detected correctly.
-- Semantic structure validated.
+The captures show the WAVE extension on app pages. Do not infer which state or
+findings correspond to an individual image from its filename alone.
 
-## Screenshot Files
-- `react-initial.png`
-- `react-invalid-form.png`
-- `react-modal-open.png`
-- `angular-initial.png`
-- `angular-invalid-form.png`
-- `angular-review-dialog-open.png`
+## To complete the evidence
 
-## Notes
-WAVE findings were cross‑validated with:
-- axe-core automated scans
-- NVDA screen‑reader testing
-- Keyboard-only navigation testing
-
-WAVE alerts were manually reviewed to confirm whether they represented WCAG failures or informational suggestions. No critical accessibility issues were identified.
-
+For each application, map the existing captures to their tested states; add
+captures only where a tested state lacks evidence (initial page, invalid form,
+dialog, and React action-menu state). Record the date, browser and version,
+WAVE extension version, URL/build tested, findings, and exact image path.
+Record how alerts and contrast results were reviewed. Keep axe results
+separate from WAVE findings.

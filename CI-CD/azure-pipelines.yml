@@ -30,6 +30,7 @@ parameters:
 variables:
   buildConfiguration: Release
   apiProject: Backend/AccessibleApi/AccessibleApi.csproj
+  apiTestProject: Backend/AccessibleApi.Tests/AccessibleApi.Tests.csproj
   artifactName: api
   DOTNET_CLI_TELEMETRY_OPTOUT: '1'
   NODE_ENV: development
@@ -59,7 +60,7 @@ stages:
 
           - bash: |
               set -euo pipefail
-              dotnet restore "$(apiProject)"
+              dotnet restore "$(apiTestProject)"
               npm ci --no-audit --no-fund
             displayName: Restore API and UI dependencies
 
@@ -68,6 +69,11 @@ stages:
               dotnet build "$(apiProject)" --configuration "$(buildConfiguration)" --no-restore
               npm run build
             displayName: Build API, React, and Angular
+
+          - bash: |
+              set -euo pipefail
+              dotnet test "$(apiTestProject)" --configuration "$(buildConfiguration)" --no-restore
+            displayName: Test API validation, endpoints, and SQLite repository
 
           - bash: |
               set -euo pipefail

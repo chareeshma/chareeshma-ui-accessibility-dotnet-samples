@@ -1,8 +1,9 @@
 # JAWS / NVDA testing notes
 
-**Status: not manually tested.** This environment does not provide JAWS or NVDA,
-and no human screen-reader session has been conducted. The notes below are a
-test record template, not test results. Playwright and axe checks are recorded
+**Status: NVDA testing performed (maintainer-reported); JAWS not recorded.**
+See [`NVDA-notes.md`](NVDA-notes.md) for the existing summary. This file is a
+checklist for adding detailed session results; it is not itself a record that
+every listed check was completed. Playwright and axe checks are recorded
 separately in `axe-results.md`.
 
 ## Test environment
@@ -10,7 +11,7 @@ separately in `axe-results.md`.
 | Screen reader | Version | Browser / version | OS | Date | Tester |
 | --- | --- | --- | --- | --- | --- |
 | JAWS | Not run | Not run | Not run | Not run | Not run |
-| NVDA | Not run | Not run | Not run | Not run | Not run |
+| NVDA | 2024.x (exact version not recorded) | Chrome, latest (exact version not recorded) | Not recorded | Not recorded | Maintainer-reported |
 
 ## Checks to perform
 
@@ -33,5 +34,6 @@ behavior, and pass/fail for the following:
 
 ## Findings
 
-No JAWS or NVDA findings are available until the checks above are performed by a
-tester with those assistive technologies.
+The existing NVDA summary reports no issues. Add detailed results and complete
+the missing environment metadata when the test record is next updated. No JAWS
+results are recorded.

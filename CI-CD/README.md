@@ -1,10 +1,10 @@
 # Azure DevOps pipeline
 
 `azure-pipelines.yml` restores dependencies, builds the .NET API and both UI
-samples, runs the existing Playwright/axe suite, publishes JUnit results and
-accessibility evidence, packages the API, and optionally deploys it to a Linux
-Azure App Service. The UI builds are validation only; this pipeline deploys the
-API, not the static UI apps.
+samples, runs .NET API tests and the Playwright/axe suite, publishes JUnit
+results and accessibility evidence, packages the API, and optionally deploys
+it to a Linux Azure App Service. The UI builds are validation only; this
+pipeline deploys the API, not the static UI apps.
 
 ## Setup
 
@@ -59,11 +59,12 @@ pipeline; configure and verify the corresponding vault access.
 
 ## Verification scope
 
-The test step executes the repository's real browser accessibility tests, not
-an empty `dotnet test` invocation. There is not yet a .NET unit/integration test
-project; the backend currently receives restore/build/publish checks only.
-Add backend tests and their explicit `dotnet test` step before treating this as
-full API regression coverage.
+The pipeline runs `dotnet test` against
+`Backend/AccessibleApi.Tests/AccessibleApi.Tests.csproj`. These tests cover
+request-model validation, controller response behavior, and SQLite repository
+operations. They are not end-to-end tests of JWT authentication, HTTP hosting,
+or Azure deployment; those behaviors require separate integration tests and a
+configured identity provider.
 
 Import and validate the pipeline in Azure DevOps after setting resource names,
 variables, permissions, environment checks, and confirming .NET 10 runtime

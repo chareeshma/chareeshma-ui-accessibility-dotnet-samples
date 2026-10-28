@@ -14,8 +14,8 @@ run independently of the API and do not send or persist form data.
 | [`styles/`](../styles/) | Shared mobile-first Sass, responsive grid, Bootstrap-aligned cards/buttons/forms, visible focus, and forced-colors support. |
 | [`shared/`](../shared/) | Framework-independent dialog focus helper used by React and Angular. |
 | [`tests/`](../tests/) | Playwright keyboard, validation, layout, and axe checks; a report-producing scan covers seven application states. |
-| [`Accessibility/`](../Accessibility/) | Generated axe results, remediation summary, and explicitly pending WAVE screenshots and JAWS/NVDA testing notes. |
-| [`Backend/`](../Backend/) | .NET 10 ASP.NET Core API with GET/POST controllers, validation, DI, logging/error middleware, JWT authorization, and SQLite queries. |
+| [`Accessibility/`](../Accessibility/) | Generated axe results, remediation status, WAVE screenshots, and manual JAWS/NVDA notes. |
+| [`Backend/`](../Backend/) | .NET 10 ASP.NET Core API, SQLite repository, and unit tests for validation, controller responses, and repository operations. |
 | [`CI-CD/`](../CI-CD/) | Azure DevOps YAML for restore/build/test/publish and opt-in Azure App Service deployment, including Key Vault and environment configuration. |
 | `Documentation/` | This overview, the [accessibility checklist](Accessibility-Checklist.md), and [design-system implementation guide](Design-System-Implementation.md). |
 
@@ -49,7 +49,9 @@ existing UI tests, publishes evidence and an API package, then optionally deploy
 on `main`. Deployment reads a named Key Vault secret and maps runtime settings
 through environment variables. Azure resources, permissions, approvals, and
 issuer configuration must be supplied; no deployment has been claimed. Backend
-automated test coverage is not yet included.
+test coverage includes model validation, controller response behavior, and
+SQLite repository operations; it does not cover live HTTP hosting or JWT issuer
+integration.
 
 ## Tools and their actual use
 
@@ -60,16 +62,18 @@ automated test coverage is not yet included.
 | Sass/CSS Grid | Shared responsive component styling; no Bootstrap or Material package is installed. |
 | Playwright | Chromium interaction tests, focus assertions, viewport checks, and JUnit output in CI. |
 | axe-core (`@axe-core/playwright`) | Actual automated WCAG-tagged scans; see the timestamp and scope in [`axe-results.md`](../Accessibility/axe-results.md). Incomplete rules require manual review. |
-| WAVE | Planned browser-extension scans. [`WAVE-screenshots/`](../Accessibility/WAVE-screenshots/) currently contains instructions, not scan screenshots. |
-| JAWS / NVDA | Planned manual screen-reader checks. [`screen-reader-notes.md`](../Accessibility/screen-reader-notes.md) is a test template, not completed testing evidence. |
+| WAVE | Chrome extension checks have been performed (maintainer-reported); screenshot dates, extension version, exact states, and full file-to-state mapping are not recorded. See [`WAVE-screenshots/`](../Accessibility/WAVE-screenshots/). |
+| NVDA / JAWS | NVDA checks have been performed (maintainer-reported), with incomplete session metadata. JAWS testing is not recorded. [`screen-reader-notes.md`](../Accessibility/screen-reader-notes.md) is a checklist for detailed results. |
 | .NET / ASP.NET Core | .NET 10 controller API, bearer authentication, middleware, and DI. ASP.NET Core is the current framework in the .NET Core lineage. |
 | Microsoft.Data.Sqlite | Local sample persistence using SQL parameters rather than concatenated input. |
 | Azure DevOps, App Service, Key Vault | Example build/deployment orchestration and secret retrieval; requires an authorized Azure setup. |
 
 ## Start here
 
-The [root README](../README.md) contains UI setup commands.
-The [backend guide](../Backend/README.md) covers identity-provider configuration
-and API startup; the [pipeline guide](../CI-CD/README.md) covers Azure setup.
+The [root README](../README.md) contains UI setup commands and the .NET test
+command. The [backend guide](../Backend/README.md) covers identity-provider
+configuration, API startup, and test scope; the [pipeline guide](../CI-CD/README.md)
+covers Azure setup and CI checks. See the
+[accessibility overview](Accessibility-README.md) for current evidence status.
 Use the checklist before changing a component and record new evidence in
-`Accessibility/` without replacing pending manual checks with automated claims.
+`Accessibility/`, keeping manual findings distinct from automated results.

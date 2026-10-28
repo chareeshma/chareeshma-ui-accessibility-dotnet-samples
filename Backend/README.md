@@ -72,3 +72,15 @@ rate-limits, monitoring, and least-privilege roles for your deployment.
 
 The pipeline registers request logging outside exception handling so the
 request log records the final error status after the exception handler responds.
+
+## Tests
+
+Run the API tests from the repository root with:
+
+```sh
+dotnet test Backend/AccessibleApi.Tests/AccessibleApi.Tests.csproj
+```
+
+The test project covers request-model validation, controller response mapping,
+and SQLite repository create/read behavior using an isolated temporary database.
+It does not exercise a live HTTP server, JWT issuer, or Azure deployment.
