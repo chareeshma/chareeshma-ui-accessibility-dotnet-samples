@@ -1,5 +1,6 @@
 # chareeshma-ui-accessibility-dotnet
-Code samples demonstrating WCAG 2.1 AA accessibility, UI/UX implementation, .NET Core APIs, secure coding, and CI/CD practices.
+Code samples demonstrating WCAG 2.1 AA-oriented UI accessibility patterns,
+UI/UX implementation, .NET APIs, secure coding, and CI/CD practices.
 
 See the [documentation guide](Documentation/README.md) for the folder map, tool
 status, [WCAG checklist](Documentation/Accessibility-Checklist.md), and
@@ -24,6 +25,7 @@ npm run dev:angular     # http://127.0.0.1:4200 (run in another terminal)
 npm run build          # Build both applications
 npx playwright install chromium
 npm test               # Starts both apps and runs browser + axe checks
+dotnet test Backend/AccessibleApi.Tests/AccessibleApi.Tests.csproj
 ```
 
 Build outputs are `react/dist/` and `angular/dist/accessible-form/browser/`.
@@ -68,29 +70,31 @@ The Playwright suite in `tests/` covers modal containment and focus restoration,
 menu and table keyboard behavior, form errors and recovery, skip navigation,
 320/375/768/1280px layouts, and axe WCAG 2.1 A/AA checks in default, invalid-form,
 and modal states. Automated checks are not a WCAG conformance certification.
-Manually check both apps with keyboard only, browser zoom at 200% and 400%,
-forced colors, and screen readers such as NVDA/Firefox and VoiceOver/Safari.
+WAVE checks in Chrome and NVDA testing have been reported as completed; see
+`Accessibility/` for notes and remaining evidence metadata gaps. Keyboard-only,
+zoom/reflow, forced-colors, and further assistive-technology checks should be
+recorded in the accessibility checklist.
+
 These samples assume modern browsers with native `HTMLDialogElement.showModal()`
 support; older browsers need an evaluated accessible dialog alternative.
 
 ### Accessibility evidence
 
 See [`Accessibility/`](Accessibility/) for generated axe scan output,
-remediation notes, and clearly labeled WAVE and JAWS/NVDA evidence status.
+remediation notes, and WAVE/NVDA evidence status.
 Run `npm run test:axe-report` to regenerate `Accessibility/axe-results.md`.
-WAVE screenshots and screen-reader findings require manual testing and are not
-claimed until recorded.
 
 ## Backend API sample
 
 [`Backend/`](Backend/) contains a runnable ASP.NET Core 10 Web API with
 controller-based GET/POST endpoints, model validation, DI, request/error
 middleware, OIDC-discovered JWT validation, role-based authorization, and
-parameterized SQLite access. See its README for identity-provider configuration
-and run instructions.
+parameterized SQLite access. See its README for identity-provider configuration,
+run instructions, and the .NET test command.
 
 ## CI/CD pipeline
 
 [`CI-CD/`](CI-CD/) contains an Azure DevOps YAML sample covering restore, build,
-accessibility tests, artifact publication, and opt-in Azure App Service
-deployment with Key Vault secret retrieval and runtime environment variables.
+.NET and browser accessibility tests, artifact publication, and opt-in Azure
+App Service deployment with Key Vault secret retrieval and runtime environment
+variables.

@@ -1,6 +1,6 @@
 # axe-core scan results
 
-- Run date (UTC): 2026-10-27T20:25:09.454Z
+- Run date (UTC): 2026-10-28T02:00:09.980Z
 - Browser: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
 - Engine: axe-core via @axe-core/playwright
 - Ruleset tags: WCAG 2.0 A/AA and WCAG 2.1 A/AA (`wcag2a`, `wcag2aa`, `wcag21aa`)

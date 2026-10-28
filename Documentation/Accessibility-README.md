@@ -1,69 +1,44 @@
 # Accessibility Overview
 
-This repository contains React and Angular sample components demonstrating WCAG 2.1 AA–aligned accessible UI patterns, automated accessibility testing, manual screen‑reader validation, and design‑system‑driven component implementation.
+This repository contains React and Angular examples of accessible UI patterns,
+automated browser checks, and accessibility documentation. These are learning
+samples, not a WCAG conformance claim or a substitute for testing with users and
+assistive technology.
 
-## Accessibility Goals
-- Demonstrate WCAG 2.1 AA compliance across common UI components.
-- Provide examples of semantic HTML, ARIA roles, keyboard navigation, and focus management.
-- Show automated and manual accessibility testing workflows.
-- Document accessibility findings, remediation, and verification steps.
+## Components
 
-## Components Covered
-- Accessible Dropdown (React)
-- Accessible Modal (React)
-- Accessible Form (React + Angular)
-- Accessible Table (React + Angular)
+- **React:** native modal, action menu, validated form, and keyboard-navigable
+  semantic table. The action menu is not a listbox or select replacement.
+- **Angular:** reactive form with associated labels, hints, validation errors,
+  an error summary, and a native review dialog.
 
-## Accessibility Techniques Used
-- Semantic HTML (`<label>`, `<button>`, `<fieldset>`, `<legend>`)
-- ARIA roles (`role="dialog"`, `role="listbox"`, `role="alert"`)
-- ARIA states (`aria-expanded`, `aria-selected`, `aria-invalid`)
-- Keyboard navigation (Tab, Shift+Tab, Enter, Space, Escape)
-- Focus management (initial focus, trapped focus, return focus)
-- Error messaging (`aria-live="assertive"` regions)
-- Color contrast aligned with WCAG AA
-- Responsive design with accessible breakpoints
+See the [React guide](../react/README.md) and
+[Angular guide](../angular/README.md) for component behavior and keyboard
+instructions.
 
-## Automated Testing
-Automated accessibility testing is performed using:
-- **axe-core** (React + Angular)
-- **Playwright accessibility tests**
+## Verification status
 
-All axe scans show:
-- 0 violations
-- Passing rules
-- Incomplete rules requiring manual review
+- Playwright exercises keyboard interactions, form validation, focus behavior,
+  and responsive layouts for both applications.
+- The axe report records seven automated page-state scans. The report includes
+  incomplete-rule counts, which still require manual review; zero violations
+  does not establish conformance.
+- Maintainer-reported manual testing was performed with the WAVE browser
+  extension in Chrome and with NVDA. The repository includes WAVE screenshots
+  and NVDA notes. Exact test dates, browser/extension versions, and a complete
+  screenshot-to-state mapping are not recorded.
+- JAWS testing is not documented as performed.
 
-## Manual Testing
-Manual testing includes:
-- WAVE browser extension scans
-- NVDA screen‑reader testing
-- Keyboard-only navigation validation
-- Focus order verification
-- ARIA role/state announcements
+Use the [accessibility checklist](Accessibility-Checklist.md) to track
+verification. The manual testing status is based on the maintainer's report;
+the remaining documentation gaps are to add reproducible session metadata and
+map each screenshot to its tested state.
 
-See:
-- `/Accessibility/WAVE-screenshots/`
-- `/Accessibility/JAWS-NVDA-Notes.md`
-- `/Accessibility/manual-testing-summary.md`
+## WCAG and design documentation
 
-## WCAG Mapping
-A detailed mapping of WCAG 2.1 AA criteria to each component is provided in:
-- `Documentation/WCAG-2.1-AA-Mapping.md`
-
-## Design System Alignment
-Design system principles applied:
-- Reusable components
-- Consistent spacing, typography, and color tokens
-- Accessible interaction patterns
-- Predictable focus behavior
-- Clear visual hierarchy
-
-See:
-- `Documentation/Design-System-Implementation.md`
-
-## Remediation Summary
-Accessibility issues found and resolved are documented in:
-- `/Accessibility/remediation-summary.md`
-
-This repository demonstrates a complete accessibility workflow suitable for government, enterprise, and regulated environments.
+- [WCAG 2.1 AA mapping](WCAG-2.1-AA-Mapping.md) describes relevant criteria and
+  sample implementation points; it is not a conformance statement.
+- [Design-system implementation](Design-System-Implementation.md) documents
+  shared layout and interaction conventions.
+- [Accessibility evidence and remediation status](../Accessibility/remediation-summary.md)
+  records automated results and outstanding manual verification.

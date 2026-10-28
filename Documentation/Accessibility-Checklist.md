@@ -1,49 +1,41 @@
-# Accessibility Checklist (WCAG 2.1 AA)
+# Accessibility verification checklist
 
-## Structure & Semantics
-- [x] Headings follow logical hierarchy
-- [x] Landmarks used (`main`, `nav`, `form`)
-- [x] Semantic HTML used for forms, tables, buttons
+This checklist tracks implementation and evidence; it does not certify WCAG
+conformance. Automated checks and code inspection do not replace manual
+verification in supported browsers, assistive technologies, and user testing.
 
-## Keyboard Navigation
-- [x] All components operable via keyboard
-- [x] No keyboard traps
-- [x] Modal traps focus correctly
-- [x] Escape closes modal and dropdown
+## Implemented patterns (verify on changes)
 
-## Focus Management
-- [x] Visible focus indicators
-- [x] Logical focus order
-- [x] Initial focus set in modal
-- [x] Focus returned to trigger element
+- [x] Semantic headings, landmarks, labels, buttons, and native table markup are
+  present in the samples.
+- [x] Dialogs set initial focus, contain Tab navigation, support Escape, and
+  restore focus to their trigger.
+- [x] React action menu documents and implements its supported keyboard keys.
+- [x] Form hints and errors are programmatically associated, and invalid form
+  submission presents a focusable error summary.
+- [x] Visible focus styling and responsive layouts are implemented.
 
-## ARIA Roles & States
-- [x] Correct ARIA roles (`dialog`, `listbox`, `alert`)
-- [x] ARIA-expanded and ARIA-selected states update
-- [x] aria-live used for error messaging
-- [x] aria-invalid used for validation
+These are implementation observations, not proof that every criterion passes in
+every browser or assistive technology.
 
-## Forms & Validation
-- [x] Labels associated with inputs
-- [x] Required fields indicated
-- [x] Error messages announced
-- [x] Error messages linked to fields
+## Automated verification
 
-## Color & Contrast
-- [x] Text contrast meets AA
-- [x] Interactive elements meet AA
-- [x] Focus ring meets AA
+- [x] Playwright interaction and axe tests are configured in `tests/`.
+- [x] A generated axe report is committed for seven application states.
+- [ ] Re-run `npm test` after changes and retain the CI result.
+- [ ] Identify and manually resolve or disposition the axe incomplete checks.
 
-## Automated Testing
-- [x] axe-core scans completed
-- [x] Playwright accessibility tests pass
+## Manual verification status
 
-## Manual Testing
-- [x] WAVE scans completed
-- [x] NVDA screen-reader tests completed
-- [x] Keyboard-only testing completed
+- [ ] Record standalone keyboard-only checks in both applications, including
+  browser, viewport, steps, and results.
+- [x] WAVE extension checks in Chrome have been performed (maintainer-reported);
+  add dates, extension/browser versions, tested states, and screenshot mapping.
+- [x] NVDA checks have been performed (maintainer-reported); add exact version,
+  browser/OS, date, and per-component observations. JAWS testing is not recorded.
+- [ ] Verify contrast, zoom/reflow at 200% and 400%, and forced-colors behavior
+  in target browsers.
+- [ ] Review the WCAG mapping against actual components and verified results.
 
-## Documentation
-- [x] WCAG mapping completed
-- [x] NVDA notes completed
-- [x] Remediation summary completed
+See the [accessibility overview](Accessibility-README.md), [WCAG mapping](WCAG-2.1-AA-Mapping.md),
+and [evidence status](../Accessibility/remediation-summary.md).

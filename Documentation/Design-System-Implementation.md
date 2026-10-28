@@ -1,6 +1,9 @@
 # Design System Implementation
 
-This document explains how the React and Angular components follow enterprise design system principles while maintaining WCAG 2.1 AA accessibility.
+This document describes shared design-system conventions in the React and
+Angular learning samples. It is not a claim that the samples conform to WCAG
+2.1 AA; see the [WCAG mapping](WCAG-2.1-AA-Mapping.md) and
+[verification checklist](Accessibility-Checklist.md).
 
 ## Component Architecture
 - Reusable, modular components
@@ -18,10 +21,12 @@ This document explains how the React and Angular components follow enterprise de
 - Accessible font sizes (minimum 16px)
 - Sufficient contrast between text and background
 
-## Color Tokens
-- WCAG AA-compliant color palette
-- Accessible focus ring color
-- Consistent use of primary/secondary tokens
+## Color and Focus
+- Shared primary, border, text, and focus colors are defined in
+  `styles/layout.scss`.
+- The styles include a visible focus outline and forced-colors adjustments.
+- Contrast and non-text contrast need verification in supported browsers before
+  claiming WCAG success.
 
 ## Interaction Patterns
 - Dropdown: keyboard operable, ARIA-expanded
@@ -36,9 +41,12 @@ This document explains how the React and Angular components follow enterprise de
 - Error messaging aligned with WCAG 3.3.x
 
 ## Testing Alignment
-- axe-core automated scans
-- Playwright accessibility tests
-- WAVE manual scans
-- NVDA screen-reader validation
+- Playwright interaction tests and axe scans are configured; see
+  `Accessibility/axe-results.md` and `tests/`.
+- WAVE-in-Chrome and NVDA checks have been reported as manually completed.
+  Their evidence and remaining metadata gaps are documented in
+  `Accessibility/`.
+- Manual test status and automated scan results do not establish conformance.
 
-This design system approach ensures consistency, usability, and accessibility across all components.
+These conventions support consistency and accessible implementation; verify
+each interaction and visual requirement against the actual rendered application.
